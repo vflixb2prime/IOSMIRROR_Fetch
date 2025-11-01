@@ -152,6 +152,7 @@ export default function Netflix() {
 
     try {
       const allEpisodes: Episode[] = [];
+      const seasonData: any[] = [];
 
       for (const season of data.seasons) {
         const response = await fetch(
@@ -162,10 +163,20 @@ export default function Netflix() {
 
         if (response.ok && result.episodes) {
           allEpisodes.push(...result.episodes);
+          seasonData.push({
+            number: season.number,
+            id: season.id,
+            episodes: result.episodes,
+          });
         }
       }
 
       setEpisodes(allEpisodes);
+
+      // Generate .strm files
+      if (seasonData.length > 0) {
+        await generateStrmFiles(seasonData);
+      }
     } catch (err) {
       setError(
         err instanceof Error
@@ -175,6 +186,38 @@ export default function Netflix() {
       setEpisodes([]);
     } finally {
       setEpisodesLoading(false);
+    }
+  };
+
+  const generateStrmFiles = async (seasonData: any[]) => {
+    try {
+      const response = await fetch("/api/generate-strm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service: "netflix",
+          seriesName: data?.title || "Unknown",
+          seriesId: id,
+          seasons: seasonData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to generate .strm files");
+      }
+
+      setHistory([result, ...history]);
+      setShowHistory(true);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to generate .strm files. Please try again.",
+      );
     }
   };
 
