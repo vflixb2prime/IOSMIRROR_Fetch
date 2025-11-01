@@ -8,6 +8,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Netflix from "./pages/Netflix";
+import AmazonPrime from "./pages/AmazonPrime";
+import JioHotstar from "./pages/JioHotstar";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +22,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/netflix" element={<Netflix />} />
+          <Route path="/amazon-prime" element={<AmazonPrime />} />
+          <Route path="/jio-hotstar" element={<JioHotstar />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
