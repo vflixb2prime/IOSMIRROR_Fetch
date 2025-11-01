@@ -54,16 +54,52 @@ export default function Index() {
       {/* Content */}
       <div className="relative z-10">
         {/* Header */}
-        <div className="pt-20 px-6 text-center">
+        <div className="pt-16 px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tighter">
             IOSMIRROR
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 mb-2">
             Streaming Content Discovery
           </p>
-          <p className="text-slate-400 max-w-2xl mx-auto">
+          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
             Search for movies and series across your favorite streaming platforms
           </p>
+
+          {/* Fetch Cookie Button */}
+          <div className="max-w-md mx-auto mb-12">
+            {error && (
+              <div className="mb-4 bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </div>
+            )}
+            <Button
+              onClick={fetchCookie}
+              disabled={loading}
+              className={`w-full py-6 text-lg font-semibold flex items-center justify-center gap-3 transition-all ${
+                hasCookie
+                  ? "bg-gradient-to-r from-green-600 to-green-700 hover:opacity-90 border-0"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:opacity-90 border-0"
+              } text-white`}
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  Fetching Cookies...
+                </>
+              ) : hasCookie ? (
+                <>
+                  <CheckCircle2 className="w-5 h-5" />
+                  Cookie Ready ✓
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-5 h-5" />
+                  Fetch Cookies to Start
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Services Grid */}
