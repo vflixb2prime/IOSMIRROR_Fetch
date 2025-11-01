@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import * as fs from "fs";
 import * as path from "path";
+import { getSettings } from "../utils/settings";
 
 export interface StreamingDetail {
   id: string;
@@ -22,8 +23,6 @@ export interface StreamingDetail {
 }
 
 // Generate folder path based on service and series
-import { getSettings } from "../utils/settings";
-
 const generateFolderPath = (
   service: string,
   seriesName: string,
