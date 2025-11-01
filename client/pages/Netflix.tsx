@@ -537,6 +537,36 @@ export default function Netflix() {
                     </div>
                   )}
 
+                  {/* Fetch Movie Button for Movies */}
+                  {data.category === "Movie" && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Film className="w-5 h-5 text-slate-400" />
+                        <p className="text-slate-400 text-sm font-medium">
+                          STREAMING
+                        </p>
+                      </div>
+
+                      <Button
+                        onClick={handleFetchMovie}
+                        disabled={episodesLoading}
+                        className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:opacity-90 text-white border-0"
+                      >
+                        {episodesLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Generating Movie File...
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4 mr-2" />
+                            Fetch Movie
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
                   {/* Seasons for Series */}
                   {data.category === "Series" &&
                     data.seasons &&
