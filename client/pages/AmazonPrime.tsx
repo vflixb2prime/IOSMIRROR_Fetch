@@ -482,7 +482,7 @@ export default function AmazonPrime() {
                             : "border-slate-600 text-slate-300 hover:bg-slate-700"
                         }`}
                       >
-                        Season {season.number}
+                        Season {season.number} ({season.episodeCount ?? 0} eps)
                       </Button>
                     ))}
                   </div>
