@@ -76,7 +76,8 @@ const writeStrmFiles = (
 
 export const handleSaveStreaming: RequestHandler = async (req, res) => {
   try {
-    const { service, seriesName, seriesId, season, episodes } = req.body;
+    const { service, seriesName, seriesId, season, episodes, primeToken } =
+      req.body;
 
     if (!service || !seriesName || !seriesId || !season || !episodes) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -88,7 +89,7 @@ export const handleSaveStreaming: RequestHandler = async (req, res) => {
     const strmFiles = episodes.map((episode: any, index: number) => {
       const episodeNumber = episode.episode.split("E")[1] || `${index + 1}`;
       const fileName = `E${episodeNumber}.strm`;
-      const content = generateStrmContent(episode);
+      const content = generateStrmContent(episode, primeToken);
       return {
         fileName,
         path: `${folderPath}/${fileName}`,
@@ -106,7 +107,7 @@ export const handleSaveStreaming: RequestHandler = async (req, res) => {
         id: ep.id,
         title: ep.title,
         episode: ep.episode,
-        streamUrl: generateStrmContent(ep),
+        streamUrl: generateStrmContent(ep, primeToken),
       })),
       savedAt: new Date().toISOString(),
       folderPath,
