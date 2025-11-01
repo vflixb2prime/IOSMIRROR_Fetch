@@ -33,12 +33,12 @@ export default function JioHotstar() {
     try {
       const response = await fetch(`/api/jio-hotstar?id=${encodeURIComponent(id)}`);
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch data");
+        throw new Error(data.error || "Failed to fetch data");
       }
 
-      const data: HotstarData = await response.json();
       setData(data);
     } catch (err) {
       setError(
