@@ -135,15 +135,41 @@ export default function Index() {
         </div>
 
         {/* Footer */}
-        <div className="text-center py-12 border-t border-slate-800 mt-12">
-          <p className="text-slate-500 text-sm">
-            IOSMIRROR © 2024. Search movies and series across streaming platforms.
-          </p>
+        <div className="border-t border-slate-800 mt-12 pt-8 pb-8">
+          <div className="max-w-4xl mx-auto px-6">
+            <p className="text-slate-500 text-sm text-center mb-6">
+              IOSMIRROR © 2024. Search movies and series across streaming platforms.
+            </p>
+
+            {/* Cookie Status Section */}
+            {hasCookie && (
+              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  <p className="text-green-300 font-semibold">Cookie Active</p>
+                </div>
+                <div className="bg-slate-900/50 rounded p-3 mb-3 font-mono text-xs text-slate-300 break-all relative">
+                  {tHash}
+                  <button
+                    onClick={handleCopyCookie}
+                    className="absolute top-3 right-3 p-1 hover:bg-slate-800 rounded transition-colors"
+                    title="Copy to clipboard"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-green-400" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-slate-400 hover:text-slate-300" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-slate-400 text-xs">
+                  This cookie will be used for all API requests. Click "Fetch Cookies" again to refresh.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Cookie Status Indicator */}
-      <CookieStatus />
     </div>
   );
 }
