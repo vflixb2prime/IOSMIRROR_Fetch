@@ -42,6 +42,23 @@ export default function AmazonPrime() {
   const [history, setHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  // Cookie/token hooks (auto-fetch to improve UX)
+  const { tHash, loading: cookieLoading, error: cookieError, fetchCookie, hasCookie } = useCookie();
+  const { primeToken, loading: tokenLoading, error: tokenError, fetchToken, hasToken } = useToken();
+
+  useEffect(() => {
+    // If no cookie, fetch it; once cookie present, fetch token if missing
+    (async () => {
+      if (!hasCookie) {
+        await fetchCookie();
+      }
+      if (hasCookie && !hasToken) {
+        await fetchToken();
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
