@@ -12,6 +12,7 @@ import {
   handleExportStreaming,
   handleDeleteStreaming,
   handleGenerateStrm,
+  handleGenerateMovie,
 } from "./routes/streaming";
 
 export function createServer() {
