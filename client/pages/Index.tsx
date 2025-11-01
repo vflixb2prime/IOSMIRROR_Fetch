@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Play, Film, Tv } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CookieStatus } from "@/components/CookieStatus";
 
 export default function Index() {
   const services = [
