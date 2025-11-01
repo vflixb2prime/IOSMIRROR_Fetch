@@ -2,6 +2,9 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleNetflix } from "./routes/netflix";
+import { handleAmazonPrime } from "./routes/amazon-prime";
+import { handleJioHotstar } from "./routes/jio-hotstar";
 
 export function createServer() {
   const app = express();
@@ -18,6 +21,11 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Streaming service routes
+  app.get("/api/netflix", handleNetflix);
+  app.get("/api/amazon-prime", handleAmazonPrime);
+  app.get("/api/jio-hotstar", handleJioHotstar);
 
   return app;
 }
