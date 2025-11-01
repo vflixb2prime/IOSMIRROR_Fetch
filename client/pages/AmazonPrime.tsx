@@ -33,12 +33,12 @@ export default function AmazonPrime() {
     try {
       const response = await fetch(`/api/amazon-prime?id=${encodeURIComponent(id)}`);
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch data");
+        throw new Error(data.error || "Failed to fetch data");
       }
 
-      const data: PrimeData = await response.json();
       setData(data);
     } catch (err) {
       setError(
