@@ -411,12 +411,71 @@ export default function Netflix() {
                   )}
 
                   {/* Seasons for Series */}
-                  {data.category === "Series" && data.seasons && (
-                    <div className="bg-slate-700/30 rounded-lg p-4">
-                      <p className="text-white font-semibold">
-                        📺 {data.seasons} Season{data.seasons !== 1 ? "s" : ""}{" "}
-                        Available
-                      </p>
+                  {data.category === "Series" && data.seasons && data.seasons.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Tv className="w-5 h-5 text-slate-400" />
+                        <p className="text-slate-400 text-sm font-medium">
+                          SEASONS ({data.seasons.length})
+                        </p>
+                      </div>
+
+                      {/* Fetch All Seasons Button */}
+                      <div className="mb-4">
+                        <Button
+                          onClick={handleFetchAllSeasons}
+                          disabled={episodesLoading}
+                          className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:opacity-90 text-white border-0"
+                        >
+                          {episodesLoading && !selectedSeason ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Fetching All Seasons...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-4 h-4 mr-2" />
+                              Fetch All Seasons
+                            </>
+                          )}
+                        </Button>
+                      </div>
+
+                      {/* Individual Season Buttons */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {data.seasons.map((season) => (
+                          <Button
+                            key={season.id}
+                            onClick={() => handleFetchSeason(season)}
+                            disabled={episodesLoading}
+                            variant={
+                              selectedSeason?.id === season.id
+                                ? "default"
+                                : "outline"
+                            }
+                            className={`${
+                              selectedSeason?.id === season.id
+                                ? "bg-red-600 hover:bg-red-700 border-red-600 text-white"
+                                : "border-slate-600 text-slate-300 hover:bg-slate-700"
+                            }`}
+                          >
+                            {episodesLoading && selectedSeason?.id === season.id ? (
+                              <>
+                                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                                {season.number}
+                              </>
+                            ) : (
+                              <>
+                                <Play className="w-3 h-3 mr-1" />
+                                Season {season.number}
+                                <span className="ml-1 text-xs opacity-75">
+                                  ({season.episodeCount})
+                                </span>
+                              </>
+                            )}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
