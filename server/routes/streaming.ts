@@ -54,6 +54,7 @@ const ensureDirectoryExists = (dir: string): void => {
 const writeStrmFiles = (
   folderPath: string,
   episodes: any[],
+  primeToken?: string | null,
 ): Array<{ fileName: string; filePath: string; streamUrl: string }> => {
   ensureDirectoryExists(folderPath);
 
@@ -61,7 +62,7 @@ const writeStrmFiles = (
     const episodeNumber = episode.episode.split("E")[1] || `${index + 1}`;
     const fileName = `E${episodeNumber}.strm`;
     const filePath = path.join(folderPath, fileName);
-    const content = generateStrmContent(episode);
+    const content = generateStrmContent(episode, primeToken);
 
     fs.writeFileSync(filePath, content, "utf-8");
 
