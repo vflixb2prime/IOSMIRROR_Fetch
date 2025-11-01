@@ -48,11 +48,12 @@ export const handleNetflix: RequestHandler = async (req, res) => {
     console.log(
       `Fetching Netflix data for ID: ${id}, with t_hash: ${cookieValue ? "yes" : "no"}`,
     );
+    console.log("Request Cookie header:", cookieValue || "none");
     const url = `https://net20.cc/post.php?id=${encodeURIComponent(id)}`;
     const response = await fetch(url, fetchOptions);
 
     const text = await response.text();
-    console.log(`Response status: ${response.status}, length: ${text.length}`);
+    console.log(`Response status: ${response.status}, length: ${text.length}, text: ${text.substring(0, 500)}`);
 
     if (!text) {
       return res.status(500).json({ error: "Empty response from API" });
