@@ -108,18 +108,33 @@ export const handleNetflix: RequestHandler = async (req, res) => {
       seasons = jsonData.season.map((season: any, index: number) => {
         // Try multiple possible field names for episode count
         let episodeCount = 0;
+        const countValue =
+          season.ep_count ||
+          season.total_episodes ||
+          season.episode_count ||
+          season.eps ||
+          season.epCount ||
+          season.episodes_count ||
+          season.episode_count_total ||
+          season.totalEpisodes ||
+          season.count;
 
-        if (season.ep_count) {
-          episodeCount = parseInt(season.ep_count);
-        } else if (season.total_episodes) {
-          episodeCount = parseInt(season.total_episodes);
-        } else if (season.episode_count) {
-          episodeCount = parseInt(season.episode_count);
-        } else if (season.eps) {
-          episodeCount = parseInt(season.eps);
-        } else if (season.episodes && Array.isArray(season.episodes)) {
+        if (countValue) {
+          const parsed = parseInt(String(countValue), 10);
+          if (!isNaN(parsed) && parsed > 0) {
+            episodeCount = parsed;
+          }
+        }
+
+        // If still no count and episodes array exists, use array length
+        if (episodeCount === 0 && season.episodes && Array.isArray(season.episodes)) {
           episodeCount = season.episodes.length;
         }
+
+        console.log(
+          `Season ${season.number || index + 1}: episodeCount=${episodeCount}, raw fields:`,
+          Object.keys(season).slice(0, 10),
+        );
 
         return {
           id: season.id || season.sid || `${index + 1}`,
