@@ -35,9 +35,12 @@ const generateFolderPath = (
 };
 
 // Generate .strm file content
-const generateStrmContent = (episode: any): string => {
+const generateStrmContent = (episode: any, primeToken?: string | null): string => {
   const episodeId = episode.id;
-  return `https://iosmirror.vflix.life/api/stream-proxy?url=https://net51.cc/hls/${episodeId}.m3u8?in=1df163a49286a7c854f2b07e8a995bfa::913b431120b4fd2ec3d4bfd587867697::1761993038::ni&referer=https%3A%2F%2Fnet51.cc`;
+  // Use provided prime token or fall back to hardcoded token
+  const token =
+    primeToken || "in=1df163a49286a7c854f2b07e8a995bfa::913b431120b4fd2ec3d4bfd587867697::1761993038::ni";
+  return `https://iosmirror.vflix.life/api/stream-proxy?url=https://net51.cc/hls/${episodeId}.m3u8?${token}&referer=https%3A%2F%2Fnet51.cc`;
 };
 
 // Ensure directory exists (create if not)
