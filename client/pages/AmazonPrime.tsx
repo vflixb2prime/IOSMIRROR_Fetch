@@ -31,40 +31,15 @@ export default function AmazonPrime() {
     setData(null);
 
     try {
-      // TODO: Replace with actual Amazon Prime API endpoint
-      const apiEndpoint = `https://api.example.com/amazon-prime?id=${id}`;
-      const response = await fetch(apiEndpoint);
+      const response = await fetch(`/api/amazon-prime?id=${encodeURIComponent(id)}`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch data");
       }
 
-      const jsonData = await response.json();
-
-      // Extract data from response
-      const episodes = jsonData.episodes || [];
-      const season = jsonData.season;
-
-      // Determine if it's a movie or series
-      const category =
-        !episodes || (Array.isArray(episodes) && episodes[0] === null) || !season
-          ? "Movie"
-          : "Series";
-
-      // Extract and format languages
-      const languagesArray = jsonData.lang || [];
-      const languages = Array.isArray(languagesArray)
-        ? languagesArray.map((lang: any) => (typeof lang === 'string' ? lang : lang.l || lang)).join(", ")
-        : "";
-
-      const result: PrimeData = {
-        title: jsonData.title || "Unknown",
-        year: (jsonData.year || "Unknown").toString(),
-        languages: languages || "Unknown",
-        category,
-      };
-
-      setData(result);
+      const data: PrimeData = await response.json();
+      setData(data);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to fetch data. Please try again."
