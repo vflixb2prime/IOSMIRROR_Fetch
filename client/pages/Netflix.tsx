@@ -13,6 +13,7 @@ import {
   Users,
   Tag,
   Play,
+  Film,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
