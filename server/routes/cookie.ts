@@ -12,9 +12,9 @@ export const extractCookieValue = (setCookieHeader: string): string | null => {
 
 export const getTHash = async (): Promise<string | null> => {
   // Return cached value if still valid
-  if (cachedTHash && Date.now() - cacheTimestamp < CACHE_DURATION) {
-    console.log("Using cached t_hash");
-    return cachedTHash;
+  if (cachedSetCookieHeader && Date.now() - cacheTimestamp < CACHE_DURATION) {
+    console.log("Using cached Set-Cookie header");
+    return cachedSetCookieHeader;
   }
 
   try {
@@ -46,10 +46,10 @@ export const getTHash = async (): Promise<string | null> => {
     for (const cookieHeader of setCookieHeaders) {
       console.log("Processing Set-Cookie header:", cookieHeader.substring(0, 150));
       if (cookieHeader.includes("t_hash=")) {
-        cachedTHash = cookieHeader;
+        cachedSetCookieHeader = cookieHeader;
         cacheTimestamp = Date.now();
-        console.log("Successfully extracted full Set-Cookie header. Length:", cachedTHash.length);
-        return cachedTHash;
+        console.log("Successfully extracted full Set-Cookie header. Length:", cachedSetCookieHeader.length);
+        return cachedSetCookieHeader;
       }
     }
 
