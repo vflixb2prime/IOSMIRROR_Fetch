@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Loader2, AlertCircle } from "lucide-react";
+import { Search, Loader2, AlertCircle, Play, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -7,6 +7,7 @@ interface SearchResult {
   id: string;
   title: string;
   provider: "netflix" | "prime";
+  poster: string;
   year?: string;
   duration?: string;
 }
