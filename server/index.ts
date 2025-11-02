@@ -32,6 +32,7 @@ import {
   handleRefreshAllPosters,
   handleMarkAllPosters,
 } from "./routes/net51";
+import { handleUnifiedSearch } from "./routes/search";
 
 export function createServer() {
   const app = express();
