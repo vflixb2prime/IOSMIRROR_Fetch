@@ -101,6 +101,11 @@ export default function Netflix() {
   const [topLoading, setTopLoading] = useState(false);
   const [topStatus, setTopStatus] = useState("");
 
+  // All posters (full page)
+  const [postersAll, setPostersAll] = useState<Array<{ id: string; poster: string; seen?: boolean }>>([]);
+  const [postersLoading, setPostersLoading] = useState(false);
+  const [postersStatus, setPostersStatus] = useState("");
+
   useEffect(() => {
     const load = async () => {
       try {
