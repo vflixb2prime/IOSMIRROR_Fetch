@@ -96,6 +96,10 @@ export default function Netflix() {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
 
+  // Top10 posters
+  const [top10, setTop10] = useState<Array<{ id: string; poster: string }>>([]);
+  const [topLoading, setTopLoading] = useState(false);
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -107,6 +111,18 @@ export default function Netflix() {
         }
       } catch (_) {
         // ignore
+      }
+
+      // fetch top10 posters
+      setTopLoading(true);
+      try {
+        const r = await fetch("/api/netflix/top10");
+        const j = await r.json();
+        if (j && Array.isArray(j.items)) setTop10(j.items.slice(0, 10));
+      } catch (_) {
+        // ignore
+      } finally {
+        setTopLoading(false);
       }
     };
     load();
@@ -130,6 +146,71 @@ export default function Netflix() {
       setSaveStatus("Failed to save");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const fetchMetadataAndGenerate = async (serviceId: string) => {
+    setLoading(true);
+    setError("");
+    try {
+      const resp = await fetch(`/api/netflix?id=${encodeURIComponent(serviceId)}`);
+      const meta = await resp.json();
+      if (!resp.ok) throw new Error(meta.error || "Failed to fetch metadata");
+
+      const primeToken = typeof window !== "undefined" ? localStorage.getItem("prime_token") : null;
+
+      if (meta.category === "Movie") {
+        const genRes = await fetch("/api/generate-movie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            service: "netflix",
+            movieName: meta.title,
+            movieId: serviceId,
+            primeToken: primeToken || null,
+          }),
+        });
+        const jr = await genRes.json();
+        if (!genRes.ok) throw new Error(jr.error || "Failed to generate movie");
+        setHistory([jr, ...history]);
+        setShowHistory(true);
+      } else if (meta.category === "Series") {
+        // collect seasons
+        const seasons = meta.seasons || [];
+        const seasonData: any[] = [];
+        for (const s of seasons) {
+          try {
+            const r = await fetch(`/api/episodes?seriesId=${encodeURIComponent(serviceId)}&seasonId=${encodeURIComponent(s.id)}`);
+            const j = await r.json();
+            if (r.ok && j.episodes) {
+              seasonData.push({ number: s.number, id: s.id, episodes: j.episodes });
+            }
+          } catch (e) {
+            // skip this season
+          }
+        }
+        if (seasonData.length > 0) {
+          const genRes = await fetch("/api/generate-strm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              service: "netflix",
+              seriesName: meta.title,
+              seriesId: serviceId,
+              seasons: seasonData,
+              primeToken: primeToken || null,
+            }),
+          });
+          const jr = await genRes.json();
+          if (!genRes.ok) throw new Error(jr.error || "Failed to generate .strm files");
+          setHistory([jr, ...history]);
+          setShowHistory(true);
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate from poster");
+    } finally {
+      setLoading(false);
     }
   };
 
