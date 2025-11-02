@@ -64,5 +64,10 @@ export function createServer() {
   app.post("/api/netflix/top10/refresh", handleRefreshTop10);
   app.post("/api/netflix/top10/mark", handleMarkTop10);
 
+  // All posters routes
+  app.get("/api/netflix/posters", handleGetAllPosters);
+  app.post("/api/netflix/posters/refresh", handleRefreshAllPosters);
+  app.post("/api/netflix/posters/mark", handleMarkAllPosters);
+
   return app;
 }
