@@ -22,7 +22,7 @@ export default function UnifiedSearch() {
   const performSearch = async (searchQuery: string) => {
     try {
       const response = await fetch(
-        `/api/search?q=${encodeURIComponent(searchQuery)}`
+        `/api/search?q=${encodeURIComponent(searchQuery)}`,
       );
 
       if (!response.ok) {
