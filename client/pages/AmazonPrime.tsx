@@ -279,6 +279,7 @@ export default function AmazonPrime() {
         err instanceof Error ? err.message : "Failed to generate from poster",
       );
       setIsFetching(false);
+      setShowPosters(true);
       setFetchProgress("");
     }
   };
