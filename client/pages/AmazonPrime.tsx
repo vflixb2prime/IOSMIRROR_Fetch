@@ -657,29 +657,6 @@ export default function AmazonPrime() {
           {/* All Posters (full page) */}
           {showPosters && !isFetching && (
             <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl text-white font-bold">All Posters</h2>
-                <div className="flex items-center gap-3">
-                  <Button
-                    onClick={() => setShowPosters(!showPosters)}
-                    className="bg-slate-700/30 hover:bg-slate-700/50 text-white border-0 px-3 py-1 text-sm"
-                  >
-                    {showPosters ? "Hide Posters" : "Show Posters"}
-                  </Button>
-                  <span className="text-slate-400 text-sm">{postersStatus}</span>
-                  <Button
-                    onClick={handleRefreshPosters}
-                    className="bg-slate-700/30 hover:bg-slate-700/50 text-white border-0 px-3 py-1 text-sm"
-                  >
-                    {postersLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      "Refresh All"
-                    )}
-                  </Button>
-                </div>
-              </div>
-
               {postersLoading ? (
                 <div className="text-slate-400">Loading...</div>
               ) : postersAll.length === 0 ? (
