@@ -136,3 +136,45 @@ export const handleMarkTop10: RequestHandler = (req, res) => {
     res.status(500).json({ success: false, error: "Failed to mark" });
   }
 };
+
+// --- All posters handlers ---
+export const handleGetAllPosters: RequestHandler = (_req, res) => {
+  const cache = readCache(ALL_CACHE_PATH);
+  res.json({ success: true, items: cache.items || [], lastUpdated: cache.lastUpdated || 0 });
+};
+
+export const handleRefreshAllPosters: RequestHandler = async (_req, res) => {
+  try {
+    const remote = await fetchRemoteAllPosters();
+    const cache = readCache(ALL_CACHE_PATH);
+    const existingIds = new Set((cache.items || []).map((i: any) => i.id));
+
+    const merged = remote.map((it) => ({ id: it.id, poster: it.poster, seen: existingIds.has(it.id) }));
+
+    const now = Date.now();
+    const out = { items: merged, lastUpdated: now };
+    writeCache(out, ALL_CACHE_PATH);
+
+    const newCount = merged.filter((i: any) => !i.seen).length;
+    res.json({ success: true, items: merged, lastUpdated: now, newCount });
+  } catch (err) {
+    console.error("refresh all posters error", err);
+    res.status(500).json({ success: false, error: "Failed to refresh all posters" });
+  }
+};
+
+export const handleMarkAllPosters: RequestHandler = (req, res) => {
+  try {
+    const ids: string[] = (req.body && req.body.ids) || [];
+    if (!Array.isArray(ids)) return res.status(400).json({ success: false, error: "ids array required" });
+
+    const cache = readCache(ALL_CACHE_PATH);
+    const items = (cache.items || []).map((it: any) => ({ ...it, seen: ids.includes(it.id) ? true : it.seen }));
+    const out = { items, lastUpdated: Date.now() };
+    writeCache(out, ALL_CACHE_PATH);
+    res.json({ success: true, items });
+  } catch (err) {
+    console.error("mark all posters error", err);
+    res.status(500).json({ success: false, error: "Failed to mark all posters" });
+  }
+};
