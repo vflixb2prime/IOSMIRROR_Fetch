@@ -166,6 +166,9 @@ export default function Index() {
             platforms
           </p>
 
+          {/* Unified Search Box */}
+          <UnifiedSearch />
+
           {/* Fetch Cookie and Token Buttons */}
           <div className="max-w-2xl mx-auto mb-12 space-y-4">
             {(error || tokenError) && (
